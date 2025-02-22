@@ -5,5 +5,5 @@ export interface Author {
   firstName: string;
   lastName: string;
   affiliation: string;
-  books: Book[];
+  books?: Book[];
 }
