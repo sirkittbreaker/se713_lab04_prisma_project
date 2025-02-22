@@ -4,8 +4,15 @@ import * as service from "../services/memberService";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const members = await service.getMembers();
-  res.json(members);
+  if (req.query.name) {
+    const members = await service.getMembersByFirstName(
+      req.query.name as string
+    );
+    res.json(members);
+  } else {
+    const members = await service.getMembers();
+    res.json(members);
+  }
 });
 
 router.get("/:id", async (req: Request, res: Response) => {

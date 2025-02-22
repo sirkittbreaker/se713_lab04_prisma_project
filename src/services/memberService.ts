@@ -9,6 +9,10 @@ export function getMemberById(id: number): Promise<Member | null> {
   return repo.getMemberById(id);
 }
 
+export function getMembersByFirstName(name: string): Promise<Member[]> {
+  return repo.getMemberByFirstName(name);
+}
+
 export function addMember(member: Member): Promise<Member> {
   return repo.addMember(member);
 }

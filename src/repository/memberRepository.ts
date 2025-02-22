@@ -15,6 +15,14 @@ export function getMemberById(id: number): Promise<Member | null> {
   });
 }
 
+export function getMemberByFirstName(firstName: string): Promise<Member[]> {
+  return prisma.member.findMany({
+    where: {
+      firstName: firstName,
+    },
+  });
+}
+
 export function addMember(member: Member): Promise<Member> {
   return prisma.member.create({
     data: {
