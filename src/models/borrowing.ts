@@ -4,5 +4,5 @@ export interface Borrowing {
   bookId: number;
   borrowDate: Date;
   dueDate: Date;
-  returnDate?: Date;
+  returnDate?: Date | null;
 }
