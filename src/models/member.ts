@@ -5,5 +5,5 @@ export interface Member {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  borrowings: Borrowing[];
+  borrowings?: Borrowing[];
 }
