@@ -5,6 +5,6 @@ export interface Book {
   title: string;
   isbn: string;
   category: string;
-  authorId: number;
-  borrowings: Borrowing[];
+  authorId?: number | null;
+  borrowings?: Borrowing[];
 }

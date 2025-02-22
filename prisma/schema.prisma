@@ -18,8 +18,8 @@ model book {
   title      String
   isbn       String      @unique
   category   String
-  authorId   Int
-  author     author      @relation(fields: [authorId], references: [id])
+  authorId   Int?
+  author     author?     @relation(fields: [authorId], references: [id])
   borrowings borrowing[]
 }
 

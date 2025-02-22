@@ -1,11 +1,13 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import authorRoute from "./routes/authorRoute";
 import memberRoute from "./routes/memberRoute";
+import bookRoute from "./routes/bookRoute";
 
 const app = express();
 app.use(express.json());
 app.use("/authors", authorRoute);
 app.use("/members", memberRoute);
+app.use("/books", bookRoute);
 
 const port = 3000;
 
