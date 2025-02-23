@@ -38,3 +38,41 @@ export function addBook(book: Book): Promise<Book> {
     data,
   });
 }
+
+export async function getBooksByDueDate(dueDate: Date): Promise<Book[]> {
+  const borrowings = await prisma.borrowing.findMany({
+    where: {
+      dueDate: {
+        gte: new Date(dueDate.setHours(0, 0, 0, 0)),
+        lt: new Date(dueDate.setHours(24, 0, 0, 0)),
+      },
+      returnDate: null,
+    },
+    select: {
+      book: true,
+    },
+    orderBy: {
+      book: {
+        id: "asc",
+      },
+    },
+  });
+  return borrowings.map((borrowing) => borrowing.book);
+}
+
+export async function getBooksNotReturned(): Promise<Book[]> {
+  const borrowings = await prisma.borrowing.findMany({
+    where: {
+      returnDate: null,
+    },
+    select: {
+      book: true,
+    },
+    orderBy: {
+      book: {
+        id: "asc",
+      },
+    },
+  });
+  return borrowings.map((borrowing) => borrowing.book);
+}
