@@ -60,13 +60,14 @@ export async function getBooksByDueDate(dueDate: Date): Promise<Book[]> {
   return borrowings.map((borrowing) => borrowing.book);
 }
 
-export async function getBooksNotReturned(): Promise<Book[]> {
+export async function getBooksNotReturned() {
   const borrowings = await prisma.borrowing.findMany({
     where: {
       returnDate: null,
     },
     select: {
       book: true,
+      dueDate: true,
     },
     orderBy: {
       book: {
@@ -74,5 +75,10 @@ export async function getBooksNotReturned(): Promise<Book[]> {
       },
     },
   });
-  return borrowings.map((borrowing) => borrowing.book);
+  // return borrowings.map((borrowing) => borrowing.book);
+  // return borrowings;
+  return borrowings.map((borrowing) => ({
+    ...borrowing.book,
+    dueDate: borrowing.dueDate,
+  }));
 }

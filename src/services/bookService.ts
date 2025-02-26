@@ -21,6 +21,6 @@ export async function getBooksByDueDate(dueDate: Date): Promise<Book[]> {
   return repo.getBooksByDueDate(dueDate);
 }
 
-export async function getBooksNotReturned(): Promise<Book[]> {
+export async function getBooksNotReturned() {
   return repo.getBooksNotReturned();
 }
