@@ -3,22 +3,104 @@ import { Member } from "../models/member";
 
 const prisma = new PrismaClient();
 
-export function getMembers(): Promise<Member[]> {
-  return prisma.member.findMany();
-}
-
-export function getMemberById(id: number): Promise<Member | null> {
-  return prisma.member.findUnique({
-    where: {
-      id: id,
+export function getMembers() {
+  return prisma.member.findMany({
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
+      _count: {
+        select: {
+          borrowing: true,
+        },
+      },
+      borrowing: {
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          book: {
+            select: {
+              id: true,
+              title: true,
+              isbn: true,
+              category: true,
+            },
+          },
+        },
+      },
     },
   });
 }
 
-export function getMemberByFirstName(firstName: string): Promise<Member[]> {
+export function getMemberById(id: number) {
+  return prisma.member.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
+      _count: {
+        select: {
+          borrowing: true,
+        },
+      },
+      borrowing: {
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          book: {
+            select: {
+              id: true,
+              title: true,
+              isbn: true,
+              category: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export function getMemberByFirstName(firstName: string) {
   return prisma.member.findMany({
     where: {
       firstName: firstName,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
+      _count: {
+        select: {
+          borrowing: true,
+        },
+      },
+      borrowing: {
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          book: {
+            select: {
+              id: true,
+              title: true,
+              isbn: true,
+              category: true,
+            },
+          },
+        },
+      },
     },
   });
 }

@@ -14,13 +14,13 @@ datasource db {
 }
 
 model book {
-  id         Int         @id @default(autoincrement())
-  title      String
-  isbn       String      @unique
-  category   String
-  authorId   Int?
-  author     author?     @relation(fields: [authorId], references: [id])
-  borrowings borrowing[]
+  id        Int         @id @default(autoincrement())
+  title     String
+  isbn      String      @unique
+  category  String
+  authorId  Int?
+  author    author?     @relation(fields: [authorId], references: [id])
+  borrowing borrowing[]
 }
 
 model author {
@@ -28,7 +28,7 @@ model author {
   firstName   String
   lastName    String
   affiliation String
-  books       book[]
+  book        book[]
 }
 
 model member {
@@ -36,7 +36,7 @@ model member {
   firstName   String
   lastName    String
   phoneNumber String
-  borrowings  borrowing[]
+  borrowing   borrowing[]
 }
 
 model borrowing {
