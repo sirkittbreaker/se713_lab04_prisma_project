@@ -18,7 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
     }
   }
   try {
-    const result = await service.getBooksWithAuthorsPagination(
+    const result = await service.getAllBooksWithPagination(
       keyword,
       dueDate,
       pageSize,

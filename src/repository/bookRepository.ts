@@ -7,7 +7,7 @@ export async function getBooks() {
   return await prisma.book.findMany();
 }
 
-export async function getBookById(id: number) {
+export async function getBookWithAuthorsBorrowingMemberById(id: number) {
   return await prisma.book.findUnique({
     where: { id },
     select: {
@@ -57,7 +57,7 @@ export async function addBook(book: Book) {
   });
 }
 
-export async function getBooksNotReturnedPagination(
+export async function getBooksWithAuthorsBorrowingMemberNotReturnedPagination(
   pageSize: number,
   pageNo: number
 ) {
@@ -108,7 +108,7 @@ export async function getBooksNotReturnedPagination(
   return { count, books } as PageBook;
 }
 
-export async function getBooksWithAuthorsPagination(
+export async function getBooksWithAuthorsBorrowingMemberPagination(
   keyword: string,
   dueDate: Date | null,
   pageSize: number,

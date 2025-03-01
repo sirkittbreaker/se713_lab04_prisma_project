@@ -6,7 +6,7 @@ export async function getBooks() {
 }
 
 export async function getBookById(id: number) {
-  return repo.getBookById(id);
+  return repo.getBookWithAuthorsBorrowingMemberById(id);
 }
 
 // export async function getBooksByTitle(title: string) {
@@ -25,16 +25,19 @@ export async function getBooksNotReturnedPagination(
   pageSize: number,
   pageNo: number
 ) {
-  return repo.getBooksNotReturnedPagination(pageSize, pageNo);
+  return repo.getBooksWithAuthorsBorrowingMemberNotReturnedPagination(
+    pageSize,
+    pageNo
+  );
 }
 
-export async function getBooksWithAuthorsPagination(
+export async function getAllBooksWithPagination(
   keyword: string,
   dueDate: Date | null,
   pageSize: number,
   pageNo: number
 ) {
-  const pageBooks = await repo.getBooksWithAuthorsPagination(
+  const pageBooks = await repo.getBooksWithAuthorsBorrowingMemberPagination(
     keyword,
     dueDate,
     pageSize,
