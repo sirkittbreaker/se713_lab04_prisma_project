@@ -1,29 +1,47 @@
 import { PrismaClient } from "@prisma/client";
-import { Book } from "../models/book";
+import { Book, PageBook } from "../models/book";
 
 const prisma = new PrismaClient();
 
-export function getBooks(): Promise<Book[]> {
-  return prisma.book.findMany();
+export async function getBooks() {
+  return await prisma.book.findMany();
 }
 
-export function getBookById(id: number): Promise<Book | null> {
-  return prisma.book.findUnique({
+export async function getBookById(id: number) {
+  return await prisma.book.findUnique({
     where: { id },
-  });
-}
-
-export function getBooksByTitle(title: string): Promise<Book[]> {
-  return prisma.book.findMany({
-    where: {
-      title: {
-        contains: title,
+    select: {
+      id: true,
+      title: true,
+      isbn: true,
+      category: true,
+      author: {
+        select: {
+          firstName: true,
+          lastName: true,
+          affiliation: true,
+        },
+      },
+      borrowing: {
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          member: {
+            select: {
+              firstName: true,
+              lastName: true,
+              phoneNumber: true,
+            },
+          },
+        },
       },
     },
   });
 }
 
-export function addBook(book: Book): Promise<Book> {
+export async function addBook(book: Book) {
   const data: any = {
     title: book.title,
     isbn: book.isbn,
@@ -39,46 +57,171 @@ export function addBook(book: Book): Promise<Book> {
   });
 }
 
-export async function getBooksByDueDate(dueDate: Date): Promise<Book[]> {
-  const borrowings = await prisma.borrowing.findMany({
-    where: {
-      dueDate: {
-        gte: new Date(dueDate.setHours(0, 0, 0, 0)),
-        lt: new Date(dueDate.setHours(24, 0, 0, 0)),
+export async function getBooksNotReturnedPagination(
+  pageSize: number,
+  pageNo: number
+) {
+  const where: any = {
+    borrowing: {
+      some: {
+        returnDate: null,
       },
-      returnDate: null,
     },
+  };
+  const books = await prisma.book.findMany({
+    where: where,
+    skip: pageSize * (pageNo - 1),
+    take: pageSize,
     select: {
-      book: true,
-    },
-    orderBy: {
-      book: {
-        id: "asc",
+      id: true,
+      title: true,
+      isbn: true,
+      category: true,
+      author: {
+        select: {
+          firstName: true,
+          lastName: true,
+          affiliation: true,
+        },
+      },
+      borrowing: {
+        where: {
+          returnDate: null,
+        },
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          member: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       },
     },
   });
-  return borrowings.map((borrowing) => borrowing.book);
+
+  const count = await prisma.book.count({ where: where });
+  return { count, books } as PageBook;
 }
 
-export async function getBooksNotReturned() {
-  const borrowings = await prisma.borrowing.findMany({
-    where: {
-      returnDate: null,
-    },
+export async function getBooksWithAuthorsPagination(
+  keyword: string,
+  dueDate: Date | null,
+  pageSize: number,
+  pageNo: number
+) {
+  const where: any = {
+    OR: [
+      { title: { contains: keyword } },
+      { category: { contains: keyword } },
+      {
+        author: {
+          OR: [
+            { firstName: { contains: keyword } },
+            { lastName: { contains: keyword } },
+          ],
+        },
+      },
+      {
+        borrowing: {
+          some: {
+            member: {
+              OR: [
+                { firstName: { contains: keyword } },
+                { lastName: { contains: keyword } },
+              ],
+            },
+          },
+        },
+      },
+    ],
+  };
+
+  if (dueDate) {
+    if (!where.AND) {
+      where.AND = [];
+    }
+    where.AND.push({
+      borrowing: {
+        some: {
+          returnDate: null,
+          dueDate: {
+            gte: new Date(dueDate.setHours(0, 0, 0, 0)),
+            lt: new Date(dueDate.setHours(24, 0, 0, 0)),
+          },
+        },
+      },
+    });
+  }
+
+  const books = await prisma.book.findMany({
+    where: where,
+    skip: pageSize * (pageNo - 1),
+    take: pageSize,
     select: {
-      book: true,
-      dueDate: true,
-    },
-    orderBy: {
-      book: {
-        id: "asc",
+      id: true,
+      title: true,
+      isbn: true,
+      category: true,
+      author: {
+        select: {
+          firstName: true,
+          lastName: true,
+          affiliation: true,
+        },
+      },
+      borrowing: {
+        select: {
+          id: true,
+          borrowDate: true,
+          dueDate: true,
+          returnDate: true,
+          member: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       },
     },
   });
-  // return borrowings.map((borrowing) => borrowing.book);
-  // return borrowings;
-  return borrowings.map((borrowing) => ({
-    ...borrowing.book,
-    dueDate: borrowing.dueDate,
-  }));
+
+  const count = await prisma.book.count({ where: where });
+  return { count, books } as PageBook;
 }
+
+// export async function getBooksByTitle(title: string) {
+//   return prisma.book.findMany({
+//     where: {
+//       title: {
+//         contains: title,
+//       },
+//     },
+//   });
+// }
+
+// export async function getBooksByDueDate(dueDate: Date) {
+//   const borrowings = await prisma.borrowing.findMany({
+//     where: {
+//       dueDate: {
+//         gte: new Date(dueDate.setHours(0, 0, 0, 0)),
+//         lt: new Date(dueDate.setHours(24, 0, 0, 0)),
+//       },
+//       returnDate: null,
+//     },
+//     select: {
+//       book: true,
+//     },
+//     orderBy: {
+//       book: {
+//         id: "asc",
+//       },
+//     },
+//   });
+//   return borrowings.map((borrowing) => borrowing.book);
+// }

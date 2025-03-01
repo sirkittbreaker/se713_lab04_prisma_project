@@ -8,3 +8,8 @@ export interface Book {
   authorId?: number | null;
   borrowings?: Borrowing[];
 }
+
+export interface PageBook {
+  count: number;
+  books: Book[];
+}
