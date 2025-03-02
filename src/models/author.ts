@@ -7,3 +7,8 @@ export interface Author {
   affiliation: string;
   books?: Book[];
 }
+
+export interface PageAuthor {
+  count: number;
+  authors: Author[];
+}
