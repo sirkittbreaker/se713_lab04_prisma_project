@@ -7,3 +7,8 @@ export interface Member {
   phoneNumber: string;
   borrowings?: Borrowing[];
 }
+
+export interface PageMember {
+  count: number;
+  members: Member[];
+}
