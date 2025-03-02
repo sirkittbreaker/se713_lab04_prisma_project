@@ -11,7 +11,7 @@ app.use("/members", memberRoute);
 app.use("/books", bookRoute);
 app.use("/borrowing", borrowingRoute);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
