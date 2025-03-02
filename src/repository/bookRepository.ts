@@ -122,13 +122,13 @@ export async function getBooksWithAuthorsBorrowingMemberPagination(
   }
   const where: any = {
     OR: [
-      { title: { contains: keyword } },
-      { category: { contains: keyword } },
+      { title: { contains: keyword, mode: "insensitive" } },
+      { category: { contains: keyword, mode: "insensitive" } },
       {
         author: {
           OR: [
-            { firstName: { contains: keyword } },
-            { lastName: { contains: keyword } },
+            { firstName: { contains: keyword, mode: "insensitive" } },
+            { lastName: { contains: keyword, mode: "insensitive" } },
           ],
         },
       },
@@ -137,8 +137,8 @@ export async function getBooksWithAuthorsBorrowingMemberPagination(
           some: {
             member: {
               OR: [
-                { firstName: { contains: keyword } },
-                { lastName: { contains: keyword } },
+                { firstName: { contains: keyword, mode: "insensitive" } },
+                { lastName: { contains: keyword, mode: "insensitive" } },
               ],
             },
           },

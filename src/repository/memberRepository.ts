@@ -53,8 +53,8 @@ export async function getAllMembersWithBorrowingBooksPagination(
   }
   const where: any = {
     OR: [
-      { firstName: { contains: keyword } },
-      { lastName: { contains: keyword } },
+      { firstName: { contains: keyword, mode: "insensitive" } },
+      { lastName: { contains: keyword, mode: "insensitive" } },
     ],
   };
   const members = await prisma.member.findMany({

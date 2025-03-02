@@ -14,7 +14,7 @@ router.get("/", async (req: Request, res: Response) => {
       pageNo
     );
     if (result.authors.length === 0) {
-      res.status(404).send("No book found");
+      res.status(404).send("No author found");
       return;
     }
     res.setHeader("X-Total-Count", result.count.toString());
@@ -40,7 +40,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     if (book) {
       res.json(book);
     } else {
-      res.status(404).send("Book not found");
+      res.status(404).send("Author not found");
     }
   } catch (error) {
     console.error("❌ Error fetching author by ID:", error);
