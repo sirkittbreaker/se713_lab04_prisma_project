@@ -30,6 +30,9 @@ export async function getAllAuthorsWithBooksPagination(
   pageSize: number,
   pageNo: number
 ) {
+  if (pageSize <= 0 || pageNo <= 0) {
+    throw new Error("Invalid page number or page size");
+  }
   const where = {
     OR: [
       {

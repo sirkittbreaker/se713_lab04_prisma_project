@@ -61,6 +61,9 @@ export async function getBooksWithAuthorsBorrowingMemberNotReturnedPagination(
   pageSize: number,
   pageNo: number
 ) {
+  if (pageSize <= 0 || pageNo <= 0) {
+    throw new Error("Invalid page number or page size");
+  }
   const where: any = {
     borrowing: {
       some: {
@@ -114,6 +117,9 @@ export async function getBooksWithAuthorsBorrowingMemberPagination(
   pageSize: number,
   pageNo: number
 ) {
+  if (pageSize <= 0 || pageNo <= 0) {
+    throw new Error("Invalid page number or page size");
+  }
   const where: any = {
     OR: [
       { title: { contains: keyword } },
